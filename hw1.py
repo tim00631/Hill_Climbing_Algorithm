@@ -18,30 +18,32 @@ def readfile():
         (x,y) = (int(x),int(y))
         A.append((x,y))
     return xmin,xmax,ymin,ymax,A,outputfile
+    
 def BruteForce(xmin,xmax,ymin,ymax):
     min = 1000000.0
     count = 0
-    for x in range(xmin,xmax):
-        for y in range(ymin,ymax):
+    for x in range(xmin,xmax+1):
+        for y in range(ymin,ymax+1):
             if func(x,y) < min:
                 min = func(x,y)
             count = count + 1;
     return min,count
 
-def HillClimbing(starpoint):
+def HillClimbing(starpoint,stepsize):
     current = starpoint
     count = 0
     while True:
-        count = count + 1
-        neighbor = neighbor_min(current)
+        neighbor = neighbor_min(current,stepsize)
+        count = count + 5
         if getfunc(neighbor) >= getfunc(current):
             break
         else :
             current = neighbor
     return getfunc(current),count
-def neighbor_min(current):
+
+def neighbor_min(current,stepsize):
     (x,y) = current
-    B = [(x,y+1),(x,y-1),(x-1,y),(x+1,y)]
+    B = [(x,y+stepsize),(x,y-stepsize),(x-stepsize,y),(x+stepsize,y)]
     min = getfunc(B[0])
     neighbor = B[0]
     for i in B:
@@ -56,10 +58,14 @@ def getfunc(point):
 def main():
     xmin,xmax,ymin,ymax,A,outputfile = readfile()
     min, count = BruteForce(xmin,xmax,ymin,ymax)
+    # print('%.3f\n'%min,count)
     outputfile.write('%.3f\n'%min)
     for point in A:
-        min, count = HillClimbing(point)
+        min, count = HillClimbing(point,1)
         outputfile.write('%.3f\n'%min)
+        #outputfile.write('%.3f %d\n'% (min,count))
+        #print('%.3f\n'%min,count)
     outputfile.close()
+
 if __name__ == '__main__':
     main()
