@@ -1,6 +1,12 @@
 from functions import func
 import sys
+xmin = 0
+xmax = 0
+ymin = 0
+ymax = 0
+
 def readfile():
+    global xmin,xmax,ymin,ymax
     file_in = sys.argv[1]
     file_out = sys.argv[2]
     inputfile = open(file_in,"r")
@@ -40,7 +46,6 @@ def HillClimbing(starpoint,stepsize):
         else :
             current = neighbor
     return getfunc(current),count
-
 def neighbor_min(current,stepsize):
     (x,y) = current
     B = [(x,y+stepsize),(x,y-stepsize),(x-stepsize,y),(x+stepsize,y)]
@@ -53,7 +58,12 @@ def neighbor_min(current,stepsize):
     return neighbor
 
 def getfunc(point):
-    return func(point[0], point[1])
+    global xmin,xmax,ymin,ymax
+    val = func(point[0],point[1])
+    if point[0] > xmax or point[1] > ymax or point[0] < xmin or point[1] < ymin:
+        return 1000000.0
+    else:
+        return val
 
 def main():
     xmin,xmax,ymin,ymax,A,outputfile = readfile()
